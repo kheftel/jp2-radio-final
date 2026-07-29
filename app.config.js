@@ -72,6 +72,13 @@ module.exports = {
       ],
       "./plugins/withAndroidAuto",
       "./plugins/withCarPlayScenes",
+      [
+        "expo-build-properties",
+        {
+          android: { newArchEnabled: true, edgeToEdgeEnabled: true },
+          ios: { newArchEnabled: true },
+        },
+      ],
     ],
     extra: {
       eas: {
