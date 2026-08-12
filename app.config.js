@@ -60,7 +60,7 @@ module.exports = {
         "onesignal-expo-plugin",
         {
           mode: "development",
-          iPhoneDeploymentTarget: "15.1"
+          iPhoneDeploymentTarget: "15.1",
         },
       ],
       [
@@ -76,7 +76,13 @@ module.exports = {
       [
         "expo-build-properties",
         {
-          android: { newArchEnabled: true, edgeToEdgeEnabled: true },
+          android: {
+            newArchEnabled: false,
+            edgeToEdgeEnabled: true,
+            compileSdkVersion: 36,
+            targetSdkVersion: 36,
+            buildToolsVersion: "36.0.0",
+          },
           ios: { newArchEnabled: true, deploymentTarget: "15.1" },
         },
       ],
