@@ -1,35 +1,35 @@
-import 'react-native-gesture-handler'; // Must be first — required by React Navigation
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Platform } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Ionicons } from '@expo/vector-icons';
-import TrackPlayer, {
-  Capability,
-  AppKilledPlaybackBehavior,
-  State,
-  Event,
-  useTrackPlayerEvents,
-} from 'react-native-track-player';
+import "react-native-gesture-handler"; // Must be first — required by React Navigation
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import { Platform } from "react-native";
+import { StatusBar } from "expo-status-bar";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { Ionicons } from "@expo/vector-icons";
+// import TrackPlayer, {
+//   Capability,
+//   AppKilledPlaybackBehavior,
+//   State,
+//   Event,
+//   useTrackPlayerEvents,
+// } from "react-native-track-player";
 
-import { Colors } from './src/constants/theme';
-import { Streams } from './src/constants/config';
-import { AudioContext, StreamType } from './src/context/AudioContext';
+import { Colors } from "./src/constants/theme";
+import { Streams } from "./src/constants/config";
+import { AudioContext, StreamType } from "./src/context/AudioContext";
 
-import HomeScreen from './src/screens/HomeScreen';
-import MicScreen from './src/screens/MicScreen';
-import DonateScreen from './src/screens/DonateScreen';
-import ConnectScreen from './src/screens/ConnectScreen';
-import PlayerScreen from './src/screens/PlayerScreen';
-import ScheduleScreen from './src/screens/ScheduleScreen';
-import SettingsScreen from './src/screens/SettingsScreen';
-import MenuScreen from './src/screens/MenuScreen';
+import HomeScreen from "./src/screens/HomeScreen";
+import MicScreen from "./src/screens/MicScreen";
+import DonateScreen from "./src/screens/DonateScreen";
+import ConnectScreen from "./src/screens/ConnectScreen";
+import PlayerScreen from "./src/screens/PlayerScreen";
+import ScheduleScreen from "./src/screens/ScheduleScreen";
+import SettingsScreen from "./src/screens/SettingsScreen";
+import MenuScreen from "./src/screens/MenuScreen";
 
 // Services
-import { notificationService } from './src/services/NotificationService';
-import { carPlayService } from './src/services/CarPlayService';
+import { notificationService } from "./src/services/NotificationService";
+// import { carPlayService } from './src/services/CarPlayService';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -44,7 +44,7 @@ function streamToTrack(stream: StreamType) {
     id: stream.id,
     url: stream.url,
     title: stream.name,
-    artist: 'JP2 Radio',
+    artist: "JP2 Radio",
     isLiveStream: true,
   };
 }
@@ -56,32 +56,32 @@ function streamToTrack(stream: StreamType) {
  */
 async function setupPlayer(): Promise<void> {
   try {
-    await TrackPlayer.setupPlayer({
-      autoHandleInterruptions: true, // pause for calls, resume after
-    });
+    // await TrackPlayer.setupPlayer({
+    //   autoHandleInterruptions: true, // pause for calls, resume after
+    // });
   } catch (err) {
     // "player has already been initialized" — safe to ignore on reload
     const msg = err instanceof Error ? err.message : String(err);
-    if (!msg.includes('already been initialized')) throw err;
+    if (!msg.includes("already been initialized")) throw err;
     return;
   }
 
-  await TrackPlayer.updateOptions({
-    android: {
-      // Keep the stream alive when the app is swiped away
-      appKilledPlaybackBehavior: AppKilledPlaybackBehavior.ContinuePlayback,
-    },
-    capabilities: [
-      Capability.Play,
-      Capability.Pause,
-      Capability.Stop,
-      Capability.SkipToNext, // station hop in car / lock screen
-      Capability.SkipToPrevious,
-    ],
-    compactCapabilities: [Capability.Play, Capability.Pause],
-  });
+  // await TrackPlayer.updateOptions({
+  //   android: {
+  //     // Keep the stream alive when the app is swiped away
+  //     appKilledPlaybackBehavior: AppKilledPlaybackBehavior.ContinuePlayback,
+  //   },
+  //   capabilities: [
+  //     Capability.Play,
+  //     Capability.Pause,
+  //     Capability.Stop,
+  //     Capability.SkipToNext, // station hop in car / lock screen
+  //     Capability.SkipToPrevious,
+  //   ],
+  //   compactCapabilities: [Capability.Play, Capability.Pause],
+  // });
 
-  await TrackPlayer.add(STREAM_LIST.map(streamToTrack));
+  // await TrackPlayer.add(STREAM_LIST.map(streamToTrack));
 }
 
 function TabNavigator() {
@@ -103,20 +103,20 @@ function TabNavigator() {
           let iconName: keyof typeof Ionicons.glyphMap;
 
           switch (route.name) {
-            case 'Home':
-              iconName = focused ? 'home' : 'home-outline';
+            case "Home":
+              iconName = focused ? "home" : "home-outline";
               break;
-            case 'Mic':
-              iconName = focused ? 'mic' : 'mic-outline';
+            case "Mic":
+              iconName = focused ? "mic" : "mic-outline";
               break;
-            case 'Donate':
-              iconName = focused ? 'heart' : 'heart-outline';
+            case "Donate":
+              iconName = focused ? "heart" : "heart-outline";
               break;
-            case 'Connect':
-              iconName = focused ? 'people' : 'people-outline';
+            case "Connect":
+              iconName = focused ? "people" : "people-outline";
               break;
             default:
-              iconName = 'ellipse';
+              iconName = "ellipse";
           }
 
           return <Ionicons name={iconName} size={22} color={color} />;
@@ -133,8 +133,10 @@ function TabNavigator() {
 
 export default function App() {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [currentStream, setCurrentStream] = useState<StreamType>(STREAM_LIST[0]);
-  const [currentShow] = useState('JP2 Radio');
+  const [currentStream, setCurrentStream] = useState<StreamType>(
+    STREAM_LIST[0],
+  );
+  const [currentShow] = useState("JP2 Radio");
   const [streamError, setStreamError] = useState<string | null>(null);
   const [volume, setVolumeState] = useState(1);
   const playerReady = useRef(false);
@@ -146,44 +148,48 @@ export default function App() {
         playerReady.current = true;
       })
       .catch((err) => {
-        console.error('Player setup failed:', err);
-        setStreamError('Audio player failed to start. Please restart the app.');
+        console.error("Player setup failed:", err);
+        setStreamError("Audio player failed to start. Please restart the app.");
       });
   }, []);
 
   // Mirror the native player's real state into React state — single source
   // of truth. Fires for UI taps, lock screen, Android Auto, CarPlay alike.
-  useTrackPlayerEvents(
-    [Event.PlaybackState, Event.PlaybackError, Event.PlaybackActiveTrackChanged],
-    async (event) => {
-      if (event.type === Event.PlaybackState) {
-        const playing =
-          event.state === State.Playing ||
-          event.state === State.Buffering ||
-          event.state === State.Loading;
-        setIsPlaying(playing);
-        if (event.state === State.Playing) setStreamError(null);
-      } else if (event.type === Event.PlaybackError) {
-        console.error('Playback error:', event);
-        setStreamError('Stream unavailable. Check your connection.');
-        setIsPlaying(false);
-      } else if (event.type === Event.PlaybackActiveTrackChanged) {
-        // Track changed from ANY surface (car, lock screen, our UI) —
-        // keep the app's idea of the current station in sync.
-        if (typeof event.index === 'number' && STREAM_LIST[event.index]) {
-          setCurrentStream(STREAM_LIST[event.index]);
-        }
-      }
-    }
-  );
+  // useTrackPlayerEvents(
+  //   [
+  //     Event.PlaybackState,
+  //     Event.PlaybackError,
+  //     Event.PlaybackActiveTrackChanged,
+  //   ],
+  //   async (event) => {
+  //     if (event.type === Event.PlaybackState) {
+  //       const playing =
+  //         event.state === State.Playing ||
+  //         event.state === State.Buffering ||
+  //         event.state === State.Loading;
+  //       setIsPlaying(playing);
+  //       if (event.state === State.Playing) setStreamError(null);
+  //     } else if (event.type === Event.PlaybackError) {
+  //       console.error("Playback error:", event);
+  //       setStreamError("Stream unavailable. Check your connection.");
+  //       setIsPlaying(false);
+  //     } else if (event.type === Event.PlaybackActiveTrackChanged) {
+  //       // Track changed from ANY surface (car, lock screen, our UI) —
+  //       // keep the app's idea of the current station in sync.
+  //       if (typeof event.index === "number" && STREAM_LIST[event.index]) {
+  //         setCurrentStream(STREAM_LIST[event.index]);
+  //       }
+  //     }
+  //   },
+  // );
 
   const play = useCallback(() => {
     setStreamError(null);
-    TrackPlayer.play();
+    // TrackPlayer.play();
   }, []);
 
   const pause = useCallback(() => {
-    TrackPlayer.pause();
+    // TrackPlayer.pause();
   }, []);
 
   const switchStream = useCallback(
@@ -194,20 +200,20 @@ export default function App() {
       try {
         const index = STREAM_LIST.findIndex((s) => s.id === stream.id);
         if (index >= 0) {
-          await TrackPlayer.skip(index);
-          await TrackPlayer.play();
+          // await TrackPlayer.skip(index);
+          // await TrackPlayer.play();
         }
       } catch (err) {
-        console.error('Stream switch failed:', err);
-        setStreamError('Could not switch stream. Please try again.');
+        console.error("Stream switch failed:", err);
+        setStreamError("Could not switch stream. Please try again.");
       }
     },
-    [currentStream]
+    [currentStream],
   );
 
   const setVolume = useCallback((v: number) => {
     setVolumeState(v);
-    TrackPlayer.setVolume(v);
+    // TrackPlayer.setVolume(v);
   }, []);
 
   // Platform services: push notifications everywhere; CarPlay UI on iOS.
@@ -215,22 +221,22 @@ export default function App() {
   useEffect(() => {
     notificationService.initialize();
 
-    if (Platform.OS === 'ios') {
-      carPlayService.initialize({ onPlay: play, onPause: pause, onStreamChange: switchStream });
-    }
+    // if (Platform.OS === 'ios') {
+    //   carPlayService.initialize({ onPlay: play, onPause: pause, onStreamChange: switchStream });
+    // }
 
-    return () => {
-      if (Platform.OS === 'ios') carPlayService.cleanup();
-    };
+    // return () => {
+    //   if (Platform.OS === 'ios') carPlayService.cleanup();
+    // };
   }, [play, pause, switchStream]);
 
   // Keep the iOS CarPlay Now Playing surface in sync.
-  useEffect(() => {
-    if (Platform.OS === 'ios') {
-      carPlayService.setCurrentStream(currentStream);
-      carPlayService.updateNowPlaying(currentShow, isPlaying);
-    }
-  }, [currentStream, currentShow, isPlaying]);
+  // useEffect(() => {
+  //   if (Platform.OS === 'ios') {
+  //     carPlayService.setCurrentStream(currentStream);
+  //     carPlayService.updateNowPlaying(currentShow, isPlaying);
+  //   }
+  // }, [currentStream, currentShow, isPlaying]);
 
   return (
     <AudioContext.Provider
@@ -259,8 +265,8 @@ export default function App() {
             name="Player"
             component={PlayerScreen}
             options={{
-              presentation: 'modal',
-              animation: 'slide_from_bottom',
+              presentation: "modal",
+              animation: "slide_from_bottom",
             }}
           />
           <Stack.Screen name="Schedule" component={ScheduleScreen} />
@@ -269,8 +275,8 @@ export default function App() {
             name="Menu"
             component={MenuScreen}
             options={{
-              presentation: 'modal',
-              animation: 'slide_from_left',
+              presentation: "modal",
+              animation: "slide_from_left",
             }}
           />
         </Stack.Navigator>

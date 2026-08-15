@@ -56,13 +56,13 @@ module.exports = {
       favicon: "./assets/icon.png",
     },
     plugins: [
-      [
-        "onesignal-expo-plugin",
-        {
-          mode: "development",
-          iPhoneDeploymentTarget: "15.1",
-        },
-      ],
+      // [
+      //   "onesignal-expo-plugin",
+      //   {
+      //     mode: "development",
+      //     iPhoneDeploymentTarget: "15.1",
+      //   },
+      // ],
       [
         "expo-audio",
         {

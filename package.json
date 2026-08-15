@@ -25,12 +25,10 @@
     "onesignal-expo-plugin": "^2.4.0",
     "react": "19.2.0",
     "react-native": "^0.83.0",
-    "react-native-carplay": "^2.4.1-beta.0",
     "react-native-gesture-handler": "^2.31.1",
     "react-native-onesignal": "^5.4.3",
     "react-native-safe-area-context": "^5.7.0",
     "react-native-screens": "^4.24.0",
-    "react-native-track-player": "^4.1.2",
     "react-native-webview": "^13.16.1"
   },
   "devDependencies": {

@@ -1,5 +1,9 @@
-import { CarPlay, ListTemplate, NowPlayingTemplate } from 'react-native-carplay';
-import { Streams } from '../constants/config';
+// import {
+//   CarPlay,
+//   ListTemplate,
+//   NowPlayingTemplate,
+// } from "react-native-carplay";
+import { Streams } from "../constants/config";
 
 type StreamType = typeof Streams.imperialValley;
 
@@ -10,7 +14,7 @@ interface CarPlayServiceCallbacks {
 }
 
 class CarPlayService {
-  private isConnected: boolean = false;
+  /*  private isConnected: boolean = false;
   private callbacks: CarPlayServiceCallbacks | null = null;
   private currentStream: StreamType = Streams.imperialValley;
 
@@ -95,7 +99,7 @@ class CarPlayService {
 
   cleanup() {
     this.callbacks = null;
-  }
+  }*/
 }
 
 export const carPlayService = new CarPlayService();
