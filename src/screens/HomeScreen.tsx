@@ -21,6 +21,7 @@ import {
   fetchSponsorBanners,
   BannerItem,
 } from "../services/BannerService";
+import { decode } from "html-entities";
 
 export default function HomeScreen() {
   const navigation = useNavigation<any>();
@@ -177,7 +178,7 @@ export default function HomeScreen() {
             )}
             <View style={styles.blogContent}>
               <Text style={styles.blogTitle} numberOfLines={2}>
-                {post.title}
+                {decode(post.title)}
               </Text>
               <Text style={styles.blogDate}>{post.pubDate}</Text>
             </View>

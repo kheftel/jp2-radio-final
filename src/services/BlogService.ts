@@ -1,4 +1,4 @@
-import { Links } from '../constants/config';
+import { Links } from "../constants/config";
 
 export interface BlogPost {
   id: string;
@@ -14,42 +14,55 @@ export interface BlogPost {
  */
 function parseRssFeed(xml: string): BlogPost[] {
   const posts: BlogPost[] = [];
-  
+
   // Extract all <item> blocks
   const itemRegex = /<item>([\s\S]*?)<\/item>/g;
   let match;
   let index = 0;
-  
+
   while ((match = itemRegex.exec(xml)) !== null) {
     const item = match[1];
-    
+
     // Extract title
-    const titleMatch = item.match(/<title><!\[CDATA\[(.*?)\]\]><\/title>|<title>(.*?)<\/title>/);
-    const title = titleMatch ? (titleMatch[1] || titleMatch[2] || '').trim() : '';
-    
+    const titleMatch = item.match(
+      /<title><!\[CDATA\[(.*?)\]\]><\/title>|<title>(.*?)<\/title>/,
+    );
+    const title = titleMatch
+      ? (titleMatch[1] || titleMatch[2] || "").trim()
+      : "";
+
+    console.log("title: " + title);
+
     // Extract link
     const linkMatch = item.match(/<link>(.*?)<\/link>/);
-    const link = linkMatch ? linkMatch[1].trim() : '';
-    
+    const link = linkMatch ? linkMatch[1].trim() : "";
+
     // Extract pubDate
     const dateMatch = item.match(/<pubDate>(.*?)<\/pubDate>/);
-    const pubDate = dateMatch ? formatDate(dateMatch[1].trim()) : '';
-    
+    const pubDate = dateMatch ? formatDate(dateMatch[1].trim()) : "";
+
     // Extract description/excerpt
-    const descMatch = item.match(/<description><!\[CDATA\[(.*?)\]\]><\/description>|<description>(.*?)<\/description>/s);
-    let excerpt = descMatch ? (descMatch[1] || descMatch[2] || '').trim() : '';
+    const descMatch = item.match(
+      /<description><!\[CDATA\[(.*?)\]\]><\/description>|<description>(.*?)<\/description>/s,
+    );
+    let excerpt = descMatch ? (descMatch[1] || descMatch[2] || "").trim() : "";
     // Strip HTML tags and limit length
-    excerpt = excerpt.replace(/<[^>]*>/g, '').substring(0, 150).trim();
-    if (excerpt.length === 150) excerpt += '...';
-    
-    // Extract image from content:encoded or media:content
+    excerpt = excerpt
+      .replace(/<[^>]*>/g, "")
+      .substring(0, 150)
+      .trim();
+    if (excerpt.length === 150) excerpt += "...";
+
+    // Extract image
     let imageUrl: string | null = null;
-    const mediaMatch = item.match(/<media:content[^>]*url="([^"]+)"/);
+    const mediaMatch = item.match(/<image>(.*?)<\/image>/);
     if (mediaMatch) {
       imageUrl = mediaMatch[1];
     } else {
       // Try to find image in content
-      const contentMatch = item.match(/<content:encoded><!\[CDATA\[([\s\S]*?)\]\]><\/content:encoded>/);
+      const contentMatch = item.match(
+        /<content:encoded><!\[CDATA\[([\s\S]*?)\]\]><\/content:encoded>/,
+      );
       if (contentMatch) {
         const imgMatch = contentMatch[1].match(/<img[^>]*src="([^"]+)"/);
         if (imgMatch) {
@@ -57,7 +70,7 @@ function parseRssFeed(xml: string): BlogPost[] {
         }
       }
     }
-    
+
     if (title && link) {
       posts.push({
         id: `post-${index}`,
@@ -70,17 +83,17 @@ function parseRssFeed(xml: string): BlogPost[] {
       index++;
     }
   }
-  
+
   return posts;
 }
 
 function formatDate(dateStr: string): string {
   try {
     const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US', {
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric',
+    return date.toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
     });
   } catch {
     return dateStr;
@@ -101,7 +114,7 @@ async function fetchFeedOnce(): Promise<BlogPost[]> {
   try {
     const response = await fetch(Links.blogFeed, {
       headers: {
-        Accept: 'application/rss+xml, application/xml, text/xml',
+        Accept: "application/rss+xml, application/xml, text/xml",
       },
       signal: controller.signal,
     });
@@ -133,7 +146,7 @@ export async function fetchBlogPosts(limit: number = 10): Promise<BlogPost[]> {
     blogCache = { data: posts, timestamp: Date.now() };
     return posts.slice(0, limit);
   } catch (firstError) {
-    console.warn('Blog fetch failed, retrying in 2s:', firstError);
+    console.warn("Blog fetch failed, retrying in 2s:", firstError);
   }
 
   // Attempt 2
@@ -143,7 +156,7 @@ export async function fetchBlogPosts(limit: number = 10): Promise<BlogPost[]> {
     blogCache = { data: posts, timestamp: Date.now() };
     return posts.slice(0, limit);
   } catch (secondError) {
-    console.error('Blog fetch failed after retry:', secondError);
+    console.error("Blog fetch failed after retry:", secondError);
     return blogCache?.data.slice(0, limit) ?? [];
   }
 }

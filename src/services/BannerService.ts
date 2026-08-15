@@ -1,4 +1,4 @@
-import { Banners } from '../constants/config';
+import { Banners } from "../constants/config";
 
 export interface BannerItem {
   imageUrl: string;
@@ -31,16 +31,16 @@ function parseBannerXml(xml: string): BannerItem[] {
     const panel = match[1];
 
     const imageMatch = panel.match(/<image>(.*?)<\/image>/);
-    const imageUrl = imageMatch ? imageMatch[1].trim() : '';
+    const imageUrl = imageMatch ? imageMatch[1].trim() : "";
 
     // Handles both <url>...</url> and self-closing <url/>
     const urlMatch = panel.match(/<url>(.*?)<\/url>|<url\s*\/>/);
-    const url = urlMatch && urlMatch[1] ? urlMatch[1].trim() : '';
+    const url = urlMatch && urlMatch[1] ? urlMatch[1].trim() : "";
 
-    if (imageUrl && imageUrl.startsWith('http')) {
+    if (imageUrl && imageUrl.startsWith("http")) {
       banners.push({
         imageUrl,
-        linkUrl: url && url.startsWith('http') ? url : null,
+        linkUrl: url && url.startsWith("http") ? url : null,
       });
     }
   }
@@ -55,9 +55,11 @@ async function fetchOnce(xmlUrl: string): Promise<BannerItem[]> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 10000);
 
+  console.log("fetchonce");
+
   try {
     const response = await fetch(xmlUrl, {
-      headers: { Accept: 'application/xml, text/xml' },
+      headers: { Accept: "application/xml, text/xml" },
       signal: controller.signal,
     });
 
@@ -66,6 +68,7 @@ async function fetchOnce(xmlUrl: string): Promise<BannerItem[]> {
     }
 
     const xml = await response.text();
+    console.log(xml);
     return parseBannerXml(xml);
   } finally {
     clearTimeout(timeoutId);
@@ -74,7 +77,7 @@ async function fetchOnce(xmlUrl: string): Promise<BannerItem[]> {
 
 /**
  * Fetch banners with cache + one retry.
- * 
+ *
  * - Cache hit (under 10 min old): returns instantly, no network.
  * - Cache miss: fetches; on failure waits 2s and retries once.
  * - Both attempts fail: returns stale cache if available, else empty array
@@ -93,7 +96,7 @@ export async function fetchBanners(xmlUrl: string): Promise<BannerItem[]> {
     cache.set(xmlUrl, { data: banners, timestamp: Date.now() });
     return banners;
   } catch (firstError) {
-    console.warn('Banner fetch failed, retrying in 2s:', firstError);
+    console.warn("Banner fetch failed, retrying in 2s:", firstError);
   }
 
   // Attempt 2 (after brief delay)
@@ -103,7 +106,7 @@ export async function fetchBanners(xmlUrl: string): Promise<BannerItem[]> {
     cache.set(xmlUrl, { data: banners, timestamp: Date.now() });
     return banners;
   } catch (secondError) {
-    console.error('Banner fetch failed after retry:', secondError);
+    console.error("Banner fetch failed after retry:", secondError);
     // Fall back to stale cache if we have one — old banners beat no banners
     return cached?.data ?? [];
   }
