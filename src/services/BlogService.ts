@@ -31,8 +31,6 @@ function parseRssFeed(xml: string): BlogPost[] {
       ? (titleMatch[1] || titleMatch[2] || "").trim()
       : "";
 
-    console.log("title: " + title);
-
     // Extract link
     const linkMatch = item.match(/<link>(.*?)<\/link>/);
     const link = linkMatch ? linkMatch[1].trim() : "";

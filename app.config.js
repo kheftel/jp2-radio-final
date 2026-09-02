@@ -77,7 +77,7 @@ module.exports = {
         "expo-build-properties",
         {
           android: {
-            newArchEnabled: false,
+            newArchEnabled: true,
             edgeToEdgeEnabled: true,
             compileSdkVersion: 36,
             targetSdkVersion: 36,

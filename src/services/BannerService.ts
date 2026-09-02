@@ -55,8 +55,6 @@ async function fetchOnce(xmlUrl: string): Promise<BannerItem[]> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-  console.log("fetchonce");
-
   try {
     const response = await fetch(xmlUrl, {
       headers: { Accept: "application/xml, text/xml" },
@@ -68,7 +66,6 @@ async function fetchOnce(xmlUrl: string): Promise<BannerItem[]> {
     }
 
     const xml = await response.text();
-    console.log(xml);
     return parseBannerXml(xml);
   } finally {
     clearTimeout(timeoutId);
